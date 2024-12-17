@@ -6,55 +6,117 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 22:17:37 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/17 09:28:25 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:48:53 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-static size_t	ft_countword(char const *s, char c)
+static int	ft_count_words(const char *s, char c)
 {
-	size_t	count;
+	int	words;
+	int	i;
 
-	if (!*s)
-		return (0);
-	count = 0;
-	while (*s)
+	words = 0;
+	i = 0;
+	while (s[i])
 	{
-		while (*s == c)
-			s++;
-		if (*s)
-			count++;
-		while (*s != c && *s)
-			s++;
+		if (i == 0 && s[i] != c)
+			words++;
+		if (i > 0 && s[i] != c && s[i - 1] == c)
+			words++;
+		i++;
 	}
-	return (count);
+	return (words);
+}
+
+static char	**ft_malloc_strs(char **strs, const char *s, char c)
+{
+	int	count;
+	int	i;
+	int	x;
+
+	count = 0;
+	i = 0;
+	x = 0;
+	while (s[i])
+	{
+		if (s[i] != c)
+			count++;
+		if ((s[i] == c && i > 0 && s[i - 1] != c)
+			|| (s[i] != c && s[i + 1] == '\0'))
+		{
+			strs[x] = malloc(sizeof(char) * (count + 1));
+			if (!strs[x])
+				return (NULL);
+			count = 0;
+			x++;
+		}
+		i++;
+	}
+	return (strs);
+}
+
+static char	**ft_cpy_strs(char **strs, const char *s, char c)
+{
+	int	i;
+	int	x;
+	int	y;
+
+	i = 0;
+	x = 0;
+	y = 0;
+	while (s[i])
+	{
+		if (s[i] != c)
+			strs[x][y++] = s[i];
+		if (s[i] != c && s[i + 1] == '\0')
+			strs[x][y] = '\0';
+		if (s[i] == c && i > 0 && s[i - 1] != c)
+		{
+			strs[x][y] = '\0';
+			x++;
+			y = 0;
+		}
+		i++;
+	}
+	return (strs);
+}
+
+static char	**ft_merror(char **strs)
+{
+	int	i;
+
+	i = 0;
+	while (strs[i])
+	{
+		free(strs[i]);
+		strs[i] = NULL;
+		i++;
+	}
+	free(strs);
+	return (NULL);
 }
 
 char	**ft_split(char const *s, char c)
 {
-	char	**lst;
-	size_t	word_len;
-	int		i;
+	char	**strs;
+	int		wordcount;
 
-	lst = (char **)malloc((ft_countword(s, c) + 1) * sizeof(char *));
-	if (!s || !lst)
-		return (0);
-	i = 0;
-	while (*s)
+	if (!s)
 	{
-		while (*s == c && *s)
-			s++;
-		if (*s)
-		{
-			if (!ft_strchr(s, c))
-				word_len = ft_strlen(s);
-			else
-				word_len = ft_strchr(s, c) - s;
-			lst[i++] = ft_substr(s, 0, word_len);
-			s += word_len;
-		}
+		return (NULL);
 	}
-	lst[i] = NULL;
-	return (lst);
+	wordcount = ft_count_words(s, c);
+	strs = malloc(sizeof(*strs) * (wordcount + 1));
+	if (!strs)
+		return (NULL);
+	if (ft_malloc_strs(strs, s, c))
+	{
+		ft_cpy_strs(strs, s, c);
+		strs[wordcount] = NULL;
+	}
+	else
+		strs = ft_merror(strs);
+	return (strs);
 }
