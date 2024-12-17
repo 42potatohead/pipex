@@ -1,0 +1,91 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipex.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/12/14 17:44:22 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/12/14 21:52:45 by zabu-bak         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include<stdio.h>
+#include<stdlib.h>
+#include<unistd.h>
+#include <stdlib.h>
+
+// int main() {
+// 	char *arg[] = {"ls", "-ltra", NULL};
+// 	char *arg2[] = {"ls", "|", "grep", "test", NULL};
+// 	// execve("/bin/ls", arg, NULL);
+// 	execve("/bin/grep", arg2, NULL);
+// 	printf("Error");
+
+// 	return 0;
+// }
+
+int main() {
+    int pipefd[2];  // Pipe file descriptors
+    pid_t pid1, pid2;
+
+    // Create a pipe
+    if (pipe(pipefd) == -1) {
+        perror("pipe failed");
+        return 1;
+    }
+
+    // Fork the first child process (for "ls -ltra")
+    pid1 = fork();
+    if (pid1 == -1) {
+        perror("fork failed");
+        return 1;
+    }
+
+    if (pid1 == 0) {
+        // In the first child process
+        close(pipefd[0]);  // Close the read end of the pipe
+        dup2(pipefd[1], STDOUT_FILENO);  // Redirect stdout to the pipe
+        close(pipefd[1]);  // Close the write end of the pipe after redirect
+
+        // Execute "ls -ltra"
+        char *arg[] = {"ls", "-ltra", NULL};
+        execve("/bin/ls", arg, NULL);
+
+        // If execve fails
+        perror("execve failed");
+        return 1;
+    }
+
+    // Fork the second child process (for "grep test")
+    pid2 = fork();
+    if (pid2 == -1) {
+        perror("fork failed");
+        return 1;
+    }
+
+    if (pid2 == 0) {
+        // In the second child process
+        close(pipefd[1]);  // Close the write end of the pipe
+        dup2(pipefd[0], STDIN_FILENO);  // Redirect stdin from the pipe
+        close(pipefd[0]);  // Close the read end of the pipe after redirect
+
+        // Execute "grep test"
+        char *arg2[] = {"grep", "test", NULL};
+        execve("/bin/grep", arg2, NULL);
+
+        // If execve fails
+        perror("execve failed");
+        return 1;
+    }
+
+    // In the parent process, close both ends of the pipe
+    close(pipefd[0]);
+    close(pipefd[1]);
+
+    // Wait for both children to finish
+    wait(NULL);
+    wait(NULL);
+
+    return 0;
+}

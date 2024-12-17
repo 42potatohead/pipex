@@ -1,0 +1,16 @@
+total 56
+drwxr-xr-x 13 zabu-bak 2024_42campus   178 Dec 14 17:43 ..
+-rw-r--r--  1 zabu-bak 2024_42campus  2823 Dec 15 10:44 pipex copy.c2
+-rw-r--r--  1 zabu-bak 2024_42campus  1038 Dec 15 11:05 pipex.h
+drwxr-xr-x  2 zabu-bak 2024_42campus    27 Dec 15 14:05 .vscode
+-rw-r--r--  1 zabu-bak 2024_42campus     0 Dec 15 15:54 pipex.c3
+-rw-r--r--  1 zabu-bak 2024_42campus   636 Dec 16 16:13 Makefile
+-rw-r--r--  1 zabu-bak 2024_42campus    99 Dec 16 16:38 infile
+-rw-r--r--  1 zabu-bak 2024_42campus  2392 Dec 16 18:57 pipex.c
+-rw-r--r--  1 zabu-bak 2024_42campus  3912 Dec 16 18:57 pipex.o
+drwxr-xr-x  2 zabu-bak 2024_42campus   155 Dec 16 18:57 printf
+drwxr-xr-x  2 zabu-bak 2024_42campus  4096 Dec 16 18:58 libft
+-rwxr-xr-x  1 zabu-bak 2024_42campus 21480 Dec 16 18:58 pipex
+-rw-r--r--  1 zabu-bak 2024_42campus   954 Dec 16 18:59 outfile
+drwxr-xr-x  5 zabu-bak 2024_42campus   188 Dec 16 18:59 .
+-r--  1 zabu-bak 2024_42campus   954 Dec 16 18:59 outfile
