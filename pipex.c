@@ -6,16 +6,18 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/17 12:48:00 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/19 18:55:11 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-int check_file(int ac, char **av, int inorout)
+void check_file(t_data *data, int ac, char **av, int inorout)
 {
+	data->ecmd1 = 0;
+	data->ecmd2 = 0;
 	if (ac != 5)
-		return(ft_printf("Wrong number of arugments", 0));
+		exit(-1);
 	if (inorout == 0)
 	{
 		if(access(av[1], F_OK) != 0 || access(av[1], R_OK) != 0)
@@ -23,13 +25,15 @@ int check_file(int ac, char **av, int inorout)
 			perror("Infile missing");
 			exit(errno);
 		}
+		if (av[2][0])
+			data->cmd1 = ft_split(av[2], ' ');
+		else
+			data->ecmd1 = 1;
+		if (av[3][0])
+			data->cmd2 = ft_split(av[3], ' ');
+		else
+			data->ecmd2 = 1;
 	}
-	else
-	{
-		if(access(av[4], F_OK) == 0)
-			unlink(av[4]);
-	}
-	return (1);
 }
 
 int	child(int pid, char **cmd, int pipefd[], int fd, int inorout)
@@ -53,34 +57,41 @@ int	child(int pid, char **cmd, int pipefd[], int fd, int inorout)
 		close(pipefd[1]);
 		if(execve(ft_strjoin("/bin/", cmd[0]), cmd, NULL) == -1)
 			return(errno);
+
 	}
 	return (errno);
 }
 
-void cleanup(char **cmd1, char **cmd2)
+void cleanup(t_data *data, char **cmd1, char **cmd2)
 {
 	int i = 0;
-	while (cmd1[i])
+	if(data->ecmd1 == 0)
 	{
-		free(cmd1[i]);
-		i++;
+		while (cmd1[i])
+		{
+			free(cmd1[i]);
+			i++;
+		}
+		free(cmd1);
 	}
 	i = 0;
-	while (cmd2[i])
+	if(data->ecmd2 == 0)
 	{
-		free(cmd2[i]);
-		i++;
+		while (cmd2[i])
+		{
+			free(cmd2[i]);
+			i++;
+		}
+		free(cmd2);
 	}
-	free(cmd1);
-	free(cmd2);
 }
 
-void	pid_check(int pid, char **cmd1, char **cmd2)
+void	pid_check(t_data *data,int pid, char **cmd1, char **cmd2)
 {
 	if (pid == -1)
 	{
 		perror("");
-		cleanup(cmd1, cmd2);
+		cleanup(data, cmd1, cmd2);
 		exit(errno);
 	}
 }
@@ -89,26 +100,30 @@ int	main(int ac, char **av)
 {
 	t_data data;
 
-	check_file(ac, av, 0);
+	check_file(&data, ac, av, 0);
 	data.fd = open(av[1], O_RDONLY);
 
-	data.cmd1 = ft_split(av[2], ' ');
-	data.cmd2 = ft_split(av[3], ' ');
 	if (pipe(data.pipefd) == -1)
 		perror("pipe error");
-	data.pid1 = fork();
-	pid_check(data.pid1, data.cmd1, data.cmd2);
-	child(data.pid1, data.cmd1, data.pipefd, data.fd, 0);
-	check_file(ac, av, 1);
-	data.fd2 = open(av[4], O_RDWR | O_CREAT, 0644);
-	data.pid2 = fork();
-	pid_check(data.pid2, data.cmd1, data.cmd2);
-	child(data.pid2,data.cmd2, data.pipefd, data.fd2, 1);
-
+	if (data.ecmd1 == 0)
+	{
+		data.pid1 = fork();
+		pid_check(&data, data.pid1, data.cmd1, data.cmd2);
+		child(data.pid1, data.cmd1, data.pipefd, data.fd, 0);
+	}
+	data.fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (data.ecmd2 == 0)
+	{
+		data.pid2 = fork();
+		pid_check(&data, data.pid2, data.cmd1, data.cmd2);
+		child(data.pid2,data.cmd2, data.pipefd, data.fd2, 1);
+	}
 	close(data.pipefd[0]);
 	close(data.pipefd[1]);
-	waitpid(data.pid1, NULL, 0);
-	waitpid(data.pid2, NULL, 0);
-	cleanup(data.cmd1, data.cmd2);
+	if (data.ecmd1 == 0)
+		waitpid(-1, NULL, 0);
+	if (data.ecmd2 == 0)
+		waitpid(-1, NULL, 0);
+	cleanup(&data, data.cmd1, data.cmd2);
 	return (errno);
 }
