@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/20 16:36:49 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/20 17:47:10 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,6 +87,7 @@ void	cleanup(t_data *data, char **cmd1, char **cmd2)
 		free(cmd2);
 	}
 }
+// find a way to utilitize this function correctly
 
 void	pid_check(t_data *data, int pid, char **cmd1, char **cmd2)
 {
@@ -97,6 +98,7 @@ void	pid_check(t_data *data, int pid, char **cmd1, char **cmd2)
 		exit(errno);
 	}
 }
+// shorten main
 
 int	main(int ac, char **av)
 {
