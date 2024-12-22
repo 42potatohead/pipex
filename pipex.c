@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/20 17:47:10 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/22 18:11:13 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 	}
 }
 
-int	child(int pid, char **cmd, int pipefd[], int fd, int inorout, t_data *data)
+void	child(int pid, char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 {
 	if (pid == 0)
 	{
@@ -57,9 +57,15 @@ int	child(int pid, char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 		close(pipefd[0]);
 		close(pipefd[1]);
 		if (execve(ft_strjoin("/bin/", cmd[0]), cmd, NULL) == -1)
-			return (errno);
+		{
+			if (errno == ENOENT)
+				exit(127);
+			if (errno == EACCES)
+				exit(126);
+			perror("execve failed");
+			exit(errno);
+		}
 	}
-	return (errno);
 }
 
 void	cleanup(t_data *data, char **cmd1, char **cmd2)
@@ -125,10 +131,11 @@ int	main(int ac, char **av)
 	close(data.pipefd[1]);
 	close(data.fd);
 	close(data.fd2);
+	int	status;
 	if (data.ecmd1 == 0)
-		waitpid(-1, &data.fd, 0);
+		waitpid(data.pid1, &data.fd, 0);
 	if (data.ecmd2 == 0)
-		waitpid(-1, &data.fd, 0);
+		waitpid(data.pid2, &status, 0);
 	cleanup(&data, data.cmd1, data.cmd2);
-	return (WEXITSTATUS(data.fd));
+	return (WEXITSTATUS(status));
 }
