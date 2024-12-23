@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/23 18:54:34 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/23 19:04:34 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,8 @@ int	main(int ac, char **av)
 {
 	t_data	data;
 
+	data.pid1 = 1651651;
+	data.pid2 = 161651;
 	check_file(&data, ac, av, 0);
 	data.fd = open(av[1], O_RDONLY);
 	if (pipe(data.pipefd) == -1)
