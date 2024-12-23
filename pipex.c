@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/22 18:11:13 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/23 18:54:34 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,10 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 	}
 }
 
-void	child(int pid, char **cmd, int pipefd[], int fd, int inorout, t_data *data)
+void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 {
-	if (pid == 0)
-	{
+	// if (pid == 0)
+	// {
 		if (inorout == 1)
 			close(data->fd);
 		if (inorout == 0)
@@ -65,7 +65,7 @@ void	child(int pid, char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 			perror("execve failed");
 			exit(errno);
 		}
-	}
+	// }
 }
 
 void	cleanup(t_data *data, char **cmd1, char **cmd2)
@@ -95,14 +95,18 @@ void	cleanup(t_data *data, char **cmd1, char **cmd2)
 }
 // find a way to utilitize this function correctly
 
-void	pid_check(t_data *data, int pid, char **cmd1, char **cmd2)
+void	pid_check(t_data *data, int pid, char **cmd, int fd)
 {
 	if (pid == -1)
 	{
 		perror("");
-		cleanup(data, cmd1, cmd2);
+		cleanup(data, data->cmd1, data->cmd2);
 		exit(errno);
 	}
+	if (pid == 0 && pid == data->pid1)
+		child(cmd, data->pipefd, fd, 0, data);
+	if (pid == 0 && pid == data->pid2)
+		child(cmd, data->pipefd, fd, 1, data);
 }
 // shorten main
 
@@ -117,15 +121,13 @@ int	main(int ac, char **av)
 	if (data.ecmd1 == 0)
 	{
 		data.pid1 = fork();
-		pid_check(&data, data.pid1, data.cmd1, data.cmd2);
-		child(data.pid1, data.cmd1, data.pipefd, data.fd, 0, &data);
+		pid_check(&data, data.pid1, data.cmd1, data.fd);
 	}
 	data.fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (data.ecmd2 == 0)
 	{
 		data.pid2 = fork();
-		pid_check(&data, data.pid2, data.cmd1, data.cmd2);
-		child(data.pid2, data.cmd2, data.pipefd, data.fd2, 1, &data);
+		pid_check(&data, data.pid2, data.cmd2, data.fd2);
 	}
 	close(data.pipefd[0]);
 	close(data.pipefd[1]);
