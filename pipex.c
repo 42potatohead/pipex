@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/23 19:04:34 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/24 18:53:34 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,16 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 	data->ecmd2 = 0;
 	if (ac != 5)
 		exit(-1);
+	if (access(av[4], W_OK) != 0)
+	{
+		perror("");
+		exit(errno);
+	}
 	if (inorout == 0)
 	{
 		if (access(av[1], F_OK) != 0 || access(av[1], R_OK) != 0)
 		{
-			perror("Infile missing");
+			data->ecmd1 = 1;
 			exit(errno);
 		}
 		if (av[2][0])
@@ -38,8 +43,6 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 
 void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 {
-	// if (pid == 0)
-	// {
 		if (inorout == 1)
 			close(data->fd);
 		if (inorout == 0)
@@ -65,7 +68,6 @@ void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 			perror("execve failed");
 			exit(errno);
 		}
-	// }
 }
 
 void	cleanup(t_data *data, char **cmd1, char **cmd2)
@@ -76,22 +78,20 @@ void	cleanup(t_data *data, char **cmd1, char **cmd2)
 	if (data->ecmd1 == 0)
 	{
 		while (cmd1[i])
-		{
-			free(cmd1[i]);
-			i++;
-		}
+			free(cmd1[i++]);
 		free(cmd1);
 	}
 	i = 0;
 	if (data->ecmd2 == 0)
 	{
 		while (cmd2[i])
-		{
-			free(cmd2[i]);
-			i++;
-		}
+			free(cmd2[i++]);
 		free(cmd2);
 	}
+	close(data->pipefd[0]);
+	close(data->pipefd[1]);
+	close(data->fd);
+	close(data->fd2);
 }
 // find a way to utilitize this function correctly
 
@@ -114,8 +114,8 @@ int	main(int ac, char **av)
 {
 	t_data	data;
 
-	data.pid1 = 1651651;
-	data.pid2 = 161651;
+	data.pid1 = -2;
+	data.pid2 = -2;
 	check_file(&data, ac, av, 0);
 	data.fd = open(av[1], O_RDONLY);
 	if (pipe(data.pipefd) == -1)
@@ -131,15 +131,10 @@ int	main(int ac, char **av)
 		data.pid2 = fork();
 		pid_check(&data, data.pid2, data.cmd2, data.fd2);
 	}
-	close(data.pipefd[0]);
-	close(data.pipefd[1]);
-	close(data.fd);
-	close(data.fd2);
-	int	status;
-	if (data.ecmd1 == 0)
-		waitpid(data.pid1, &data.fd, 0);
-	if (data.ecmd2 == 0)
-		waitpid(data.pid2, &status, 0);
 	cleanup(&data, data.cmd1, data.cmd2);
-	return (WEXITSTATUS(status));
+	if (data.ecmd1 == 0)
+		waitpid(data.pid1, &data.fd2, 0);
+	if (data.ecmd2 == 0)
+		waitpid(data.pid2, &data.fd, 0);
+	return (WEXITSTATUS(data.fd));
 }
