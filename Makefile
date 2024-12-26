@@ -9,7 +9,7 @@ OBJ := $(SRC:%.c=%.o)
 PRINTF_OBJ := $(PRINTF_SRC:%.c=%.o)
 
 CC = cc
-CCFLAGS = -Wextra -Wall -Werror -L./libft -lft
+CCFLAGS = -Wextra -Wall -Werror -L./libft -lft -g
 
 all: $(NAME)
 
