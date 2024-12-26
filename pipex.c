@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/26 17:54:05 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/26 19:30:26 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,8 +46,6 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 
 void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 {
-		if (inorout == 1)
-			close(data->fd);
 		if (inorout == 0)
 		{
 			dup2(fd, STDIN_FILENO);
@@ -79,14 +77,14 @@ void	cleanup(t_data *data, char **cmd1, char **cmd2)
 	int	i;
 
 	i = 0;
-	if (data->ecmd1 == 0)
+	if (cmd1 != NULL)
 	{
 		while (cmd1[i])
 			free(cmd1[i++]);
 		free(cmd1);
 	}
 	i = 0;
-	if (data->ecmd2 == 0)
+	if (cmd2 != NULL)
 	{
 		while (cmd2[i])
 			free(cmd2[i++]);
@@ -123,9 +121,11 @@ int	main(int ac, char **av)
 	check_file(&data, ac, av, 0);
 	if (pipe(data.pipefd) == -1)
 		perror("pipe error");
+	data.fd = open(av[1], O_RDONLY);
+	if (data.fd == -1)
+		data.fd = STDOUT_FILENO;
 	if (data.ecmd1 == 0)
 	{
-	data.fd = open(av[1], O_RDONLY);
 		data.pid1 = fork();
 		pid_check(&data, data.pid1, data.cmd1, data.fd);
 	}
