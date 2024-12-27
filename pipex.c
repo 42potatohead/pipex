@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/26 19:30:26 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/27 20:50:11 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 	if (access(av[4], F_OK) == 0 && access(av[4], W_OK) != 0)
 	{
 		perror("test");
-		// exit(errno);
+		exit(1);
 	}
 	if (inorout == 0)
 	{
@@ -46,6 +46,7 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 
 void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 {
+			ft_printf("%d\n", fd);
 		if (inorout == 0)
 		{
 			dup2(fd, STDIN_FILENO);
@@ -96,9 +97,12 @@ void	cleanup(t_data *data, char **cmd1, char **cmd2)
 	close(data->fd2);
 }
 // if cant accsess outfile still run cmd1
+// ./pipex infile "cat" "grep" outf FIX!!!
+// ./pipex "" "" "" "" :( FIXX
 
 void	pid_check(t_data *data, int pid, char **cmd, int fd)
 {
+	printf("%d",fd);
 	if (pid == -1)
 	{
 		perror("");
@@ -122,8 +126,6 @@ int	main(int ac, char **av)
 	if (pipe(data.pipefd) == -1)
 		perror("pipe error");
 	data.fd = open(av[1], O_RDONLY);
-	if (data.fd == -1)
-		data.fd = STDOUT_FILENO;
 	if (data.ecmd1 == 0)
 	{
 		data.pid1 = fork();
