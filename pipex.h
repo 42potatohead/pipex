@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:44:24 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/18 18:52:20 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/29 16:38:04 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ typedef struct s_data
 	int pid2;
 	int	ecmd1;
 	int	ecmd2;
+	int outfile;
+	int infile;
 } t_data;
 
 #endif

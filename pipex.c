@@ -6,13 +6,13 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/12/27 20:50:11 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/19 12:57:48 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-void	cleanup(t_data *data, char **cmd1, char **cmd2);
+void	cleanup(t_data *data, char **cmd1, char **cmd2, int flag);
 void	check_file(t_data *data, int ac, char **av, int inorout);
 
 void	check_file(t_data *data, int ac, char **av, int inorout)
@@ -31,7 +31,7 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 		if (access(av[1], F_OK) != 0 || access(av[1], R_OK) != 0)
 		{
 			data->ecmd1 = 1;
-			// exit(errno);
+			perror("");
 		}
 		if (av[2][0])
 			data->cmd1 = ft_split(av[2], ' ');
@@ -46,7 +46,6 @@ void	check_file(t_data *data, int ac, char **av, int inorout)
 
 void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 {
-			ft_printf("%d\n", fd);
 		if (inorout == 0)
 		{
 			dup2(fd, STDIN_FILENO);
@@ -67,46 +66,49 @@ void	child(char **cmd, int pipefd[], int fd, int inorout, t_data *data)
 				exit(127);
 			if (errno == EACCES)
 				exit(126);
-			perror("execve failed");
-			cleanup(data, data->cmd1, data->cmd2);
+			perror("");
+			cleanup(data, data->cmd1, data->cmd2, 1);
 			exit(errno);
 		}
 }
 
-void	cleanup(t_data *data, char **cmd1, char **cmd2)
+void	cleanup(t_data *data, char **cmd1, char **cmd2, int flag)
 {
 	int	i;
 
 	i = 0;
-	if (cmd1 != NULL)
+	if (data->ecmd1 == 0 && cmd1 != NULL )
 	{
 		while (cmd1[i])
 			free(cmd1[i++]);
 		free(cmd1);
 	}
 	i = 0;
-	if (cmd2 != NULL)
+	if (data->ecmd2 == 0 && cmd2 != NULL)
 	{
 		while (cmd2[i])
 			free(cmd2[i++]);
 		free(cmd2);
 	}
-	close(data->pipefd[0]);
-	close(data->pipefd[1]);
-	close(data->fd);
-	close(data->fd2);
+	if (flag == 1)
+	{
+		close(data->pipefd[0]);
+		close(data->pipefd[1]);
+	}
+	if (data->infile == 0)
+		close(data->fd);
+	if (data->outfile == 0)
+		close(data->fd2);
 }
 // if cant accsess outfile still run cmd1
 // ./pipex infile "cat" "grep" outf FIX!!!
-// ./pipex "" "" "" "" :( FIXX
 
 void	pid_check(t_data *data, int pid, char **cmd, int fd)
 {
-	printf("%d",fd);
 	if (pid == -1)
 	{
 		perror("");
-		cleanup(data, data->cmd1, data->cmd2);
+		cleanup(data, data->cmd1, data->cmd2, 1);
 		exit(errno);
 	}
 	if (pid == 0 && pid == data->pid1)
@@ -114,30 +116,46 @@ void	pid_check(t_data *data, int pid, char **cmd, int fd)
 	if (pid == 0 && pid == data->pid2)
 		child(cmd, data->pipefd, fd, 1, data);
 }
-// create outfile even if nothing works
-
 int	main(int ac, char **av)
 {
 	t_data	data;
 
 	data.pid1 = -2;
 	data.pid2 = -2;
+	data.infile = 0;
+	data.outfile = 0;
+	data.ecmd1 = 0;
+	data.ecmd1 = 0;
 	check_file(&data, ac, av, 0);
 	if (pipe(data.pipefd) == -1)
 		perror("pipe error");
 	data.fd = open(av[1], O_RDONLY);
+	if (data.fd == -1)
+		data.infile = 1;
+	if (data.fd != -1)
+	{
 	if (data.ecmd1 == 0)
 	{
 		data.pid1 = fork();
 		pid_check(&data, data.pid1, data.cmd1, data.fd);
+	}}
+	if (data.ecmd2 == 1)
+	{
+		data.outfile = 1;
+		cleanup(&data, data.cmd1, data.cmd2, 1);
 	}
 	data.fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (data.ecmd2 == 0)
+	if (data.fd2 == -1)
+		data.outfile = 1;
+	if (data.ecmd2 == 0 && data.outfile != 1)
 	{
 		data.pid2 = fork();
 		pid_check(&data, data.pid2, data.cmd2, data.fd2);
+		cleanup(&data, data.cmd1, data.cmd2, 1);
 	}
-	cleanup(&data, data.cmd1, data.cmd2);
+	// if (data.ecmd1 == 1)
+	if (data.ecmd1 == 0 && data.ecmd2 == 0)
+		cleanup(&data, data.cmd1, data.cmd2, 1);
 	if (data.ecmd1 == 0)
 		waitpid(data.pid1, &data.fd2, 0);
 	if (data.ecmd2 == 0)

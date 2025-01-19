@@ -1,11 +1,9 @@
 NAME = pipex
 SRC = pipex.c
 LIBFT_DIR = ./libft
-# GNL_SRC = $(addprefix gnl/, get_next_line.c get_next_line_utils.c)
 PRINTF_SRC = $(addprefix printf/, ft_printf.c ft_print.c ft_numbers.c )
 
 OBJ := $(SRC:%.c=%.o)
-# GNL_OBJ := $(GNL_SRC:%.c=%.o)
 PRINTF_OBJ := $(PRINTF_SRC:%.c=%.o)
 
 CC = cc
