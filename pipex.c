@@ -6,14 +6,11 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/19 12:57:48 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/20 22:58:00 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void	cleanup(t_data *data, char **cmd1, char **cmd2, int flag);
-void	check_file(t_data *data, int ac, char **av, int inorout);
 
 void	check_file(t_data *data, int ac, char **av, int inorout)
 {
@@ -120,25 +117,18 @@ int	main(int ac, char **av)
 {
 	t_data	data;
 
-	data.pid1 = -2;
-	data.pid2 = -2;
-	data.infile = 0;
-	data.outfile = 0;
-	data.ecmd1 = 0;
-	data.ecmd1 = 0;
+	init_var(&data);
 	check_file(&data, ac, av, 0);
 	if (pipe(data.pipefd) == -1)
 		perror("pipe error");
 	data.fd = open(av[1], O_RDONLY);
 	if (data.fd == -1)
 		data.infile = 1;
-	if (data.fd != -1)
-	{
-	if (data.ecmd1 == 0)
+	if (data.ecmd1 == 0 && data.fd != -1)
 	{
 		data.pid1 = fork();
 		pid_check(&data, data.pid1, data.cmd1, data.fd);
-	}}
+	}
 	if (data.ecmd2 == 1)
 	{
 		data.outfile = 1;
@@ -154,11 +144,10 @@ int	main(int ac, char **av)
 		cleanup(&data, data.cmd1, data.cmd2, 1);
 	}
 	// if (data.ecmd1 == 1)
-	if (data.ecmd1 == 0 && data.ecmd2 == 0)
-		cleanup(&data, data.cmd1, data.cmd2, 1);
-	if (data.ecmd1 == 0)
-		waitpid(data.pid1, &data.fd2, 0);
-	if (data.ecmd2 == 0)
-		waitpid(data.pid2, &data.fd, 0);
+	// if (data.ecmd1 == 0 && data.ecmd2 == 0)
+	// 	cleanup(&data, data.cmd1, data.cmd2, 1);
+	close(data.fd);
+	close (data.fd2);
+	ft_wait(&data);
 	return (WEXITSTATUS(data.fd));
 }

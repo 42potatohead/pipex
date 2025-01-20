@@ -1,5 +1,5 @@
 NAME = pipex
-SRC = pipex.c
+SRC = pipex.c pipex_utilities.c
 LIBFT_DIR = ./libft
 PRINTF_SRC = $(addprefix printf/, ft_printf.c ft_print.c ft_numbers.c )
 
