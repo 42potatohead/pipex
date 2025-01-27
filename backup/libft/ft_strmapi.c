@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/31 21:55:55 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/08/31 22:03:13 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {
+	char			*res;
 	unsigned int	i;
-	char			cc;
 
-	cc = (char)c;
+	res = malloc((ft_strlen(s) + 1) * sizeof(char));
+	if (!res)
+		return (0);
 	i = 0;
-	while (s[i])
+	while (i < ft_strlen(s))
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
+		res[i] = (*f)(i, s[i]);
 		i++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	res[i] = '\0';
+	return (res);
 }

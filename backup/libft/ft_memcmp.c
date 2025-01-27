@@ -1,31 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/28 23:39:23 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/08/30 03:31:35 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {
-	unsigned int	i;
-	char			cc;
+	size_t			i;
+	unsigned char	*str1;
+	unsigned char	*str2;
 
-	cc = (char)c;
+	str1 = (unsigned char *)s1;
+	str2 = (unsigned char *)s2;
 	i = 0;
-	while (s[i])
+	while (i < n)
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
+		if (!(str1[i] == str2[i]))
+			return (str1[i] - str2[i]);
 		i++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	return (0);
 }

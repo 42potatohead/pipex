@@ -1,31 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_putendl_fd.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/09/01 00:09:28 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/09/01 00:15:21 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+void	ft_putendl_fd(char *s, int fd)
 {
-	unsigned int	i;
-	char			cc;
-
-	cc = (char)c;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	ft_putstr_fd(s, fd);
+	ft_putchar_fd('\n', fd);
 }

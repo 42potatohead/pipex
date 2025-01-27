@@ -1,41 +1,36 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strjoin.c                                       :+:      :+:    :+:   */
+/*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/31 19:29:15 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/08/31 21:31:10 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/31 19:30:34 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/12/17 09:29:45 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strjoin(const char *s1, const char *s2)
+char	*ft_strtrim(char const *s1, char const *set)
 {
-	char	*res;
-	size_t	i;
-	size_t	j;
+	size_t	start;
+	size_t	end;
+	size_t	len;
+	char	*str;
 
-	res = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
-	if (!res)
+	if (!s1 || !set)
 		return (NULL);
-	i = 0;
-	j = 0;
-	while (s1[i])
-	{
-		res[j] = s1[i];
-		i++;
-		j++;
-	}
-	i = 0;
-	while (s2[i])
-	{
-		res[j] = s2[i];
-		i++;
-		j++;
-	}
-	res[j] = '\0';
-	return (res);
+	start = 0;
+	while (s1[start] && ft_strchr(set, s1[start]))
+		start++;
+	end = ft_strlen(s1);
+	while (end > start && ft_strchr(set, s1[end - 1]))
+		end--;
+	len = end - start;
+	str = (char *)malloc(sizeof(char) * (len + 1));
+	if (!str)
+		return (NULL);
+	ft_strlcpy(str, s1 + start, len + 1);
+	return (str);
 }

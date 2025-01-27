@@ -1,31 +1,29 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_memchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/28 19:02:34 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/09/01 22:50:54 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+void	*ft_memchr(const void *s, int c, size_t n)
 {
-	unsigned int	i;
-	char			cc;
+	unsigned char	*str;
+	unsigned char	uc;
 
-	cc = (char)c;
-	i = 0;
-	while (s[i])
+	str = (unsigned char *)s;
+	uc = (unsigned char)c;
+	while (n--)
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
-		i++;
+		if (*str == uc)
+			return (str);
+		str++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
 	return (NULL);
 }

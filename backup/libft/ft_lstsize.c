@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_lstsize.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/09/02 00:14:53 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/09/02 00:17:03 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+int	ft_lstsize(t_list *lst)
 {
-	unsigned int	i;
-	char			cc;
+	t_list	*tmp;
+	int		i;
 
-	cc = (char)c;
+	tmp = lst;
 	i = 0;
-	while (s[i])
+	while (tmp)
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
+		tmp = tmp->next;
 		i++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	return (i);
 }

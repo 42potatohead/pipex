@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/02 22:17:37 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/09/03 00:22:55 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2024/12/17 12:48:53 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,11 +105,7 @@ char	**ft_split(char const *s, char c)
 
 	if (!s)
 	{
-		strs = malloc(sizeof(char) * 1);
-		if (!strs)
-			return (NULL);
-		*strs = NULL;
-		return (strs);
+		return (NULL);
 	}
 	wordcount = ft_count_words(s, c);
 	strs = malloc(sizeof(*strs) * (wordcount + 1));

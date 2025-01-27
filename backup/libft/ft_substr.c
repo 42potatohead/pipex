@@ -1,31 +1,38 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_substr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/31 19:40:41 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/09/02 22:59:29 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+char	*ft_substr(const char *s, unsigned int start, size_t len)
 {
-	unsigned int	i;
-	char			cc;
+	char	*str;
+	size_t	i;
 
-	cc = (char)c;
+	if (!s)
+		return (NULL);
+	if (start > ft_strlen(s))
+		return (ft_strdup(""));
+	if (ft_strlen(s) - start > len)
+		str = (char *)malloc(sizeof(char) * (len + 1));
+	else
+		str = (char *)malloc(sizeof(char) * (ft_strlen(s) - start + 1));
+	if (!str)
+		return (NULL);
 	i = 0;
-	while (s[i])
+	while (i < len && s[start + i])
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
+		str[i] = s[start + i];
 		i++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	str[i] = '\0';
+	return (str);
 }

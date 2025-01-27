@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/26 18:48:48 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/08/30 01:43:07 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/22 19:14:23 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ void	ft_bzero(void *s, size_t n)
 	size_t			i;
 
 	ptr = (unsigned char *)s;
-	i = 0;
+	i = 1;
 	while (i < n)
 	{
 		ptr[i] = 0;

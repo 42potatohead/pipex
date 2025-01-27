@@ -1,31 +1,39 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/31 01:41:52 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/08/31 01:45:36 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+int	ft_atoi(const char *str)
 {
-	unsigned int	i;
-	char			cc;
+	int		i;
+	int		neg;
+	long	nb;
 
-	cc = (char)c;
 	i = 0;
-	while (s[i])
+	neg = 1;
+	nb = 0;
+	while (str[i] == ' ' || str[i] == '\t' || str[i] == '\n' || str[i] == '\v'
+		|| str[i] == '\f' || str[i] == '\r')
+		i++;
+	if (str[i] == '-' || str[i] == '+')
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
+		if (str[i] == '-')
+			neg = -1;
 		i++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	while (str[i] && ft_isdigit(str[i]))
+	{
+		nb = nb * 10 + (str[i] - '0');
+		i++;
+	}
+	return (nb * neg);
 }

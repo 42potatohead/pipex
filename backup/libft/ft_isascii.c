@@ -1,31 +1,20 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/26 16:18:00 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/08/26 20:15:08 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+int	ft_isascii(int c)
 {
-	unsigned int	i;
-	char			cc;
-
-	cc = (char)c;
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
-		i++;
-	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	if (c >= 0 && c <= 127)
+		return (1);
+	return (0);
 }

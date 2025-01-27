@@ -1,31 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/08/26 18:48:48 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/08/30 01:43:07 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+void	ft_bzero(void *s, size_t n)
 {
-	unsigned int	i;
-	char			cc;
+	unsigned char	*ptr;
+	size_t			i;
 
-	cc = (char)c;
+	ptr = (unsigned char *)s;
 	i = 0;
-	while (s[i])
+	while (i < n)
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
+		ptr[i] = 0;
 		i++;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
 }

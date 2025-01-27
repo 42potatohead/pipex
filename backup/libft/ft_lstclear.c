@@ -1,31 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strchr.c                                        :+:      :+:    :+:   */
+/*   ft_lstclear.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/29 21:23:19 by zabu-bak          #+#    #+#             */
-/*   Updated: 2024/11/29 17:10:30 by zabu-bak         ###   ########.fr       */
+/*   Created: 2024/09/03 01:29:44 by zabu-bak          #+#    #+#             */
+/*   Updated: 2024/09/03 01:37:00 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*gnl_strchr(const char *s, int c)
+void	ft_lstclear(t_list **lst, void (*del)(void *))
 {
-	unsigned int	i;
-	char			cc;
+	t_list	*tmp;
+	t_list	*next;
 
-	cc = (char)c;
-	i = 0;
-	while (s[i])
+	tmp = *lst;
+	while (tmp)
 	{
-		if (s[i] == cc)
-			return ((char *)&s[i]);
-		i++;
+		next = tmp->next;
+		ft_lstdelone(tmp, del);
+		tmp = next;
 	}
-	if (s[i] == cc)
-		return ((char *)&s[i]);
-	return (NULL);
+	*lst = NULL;
 }
