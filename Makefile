@@ -1,26 +1,23 @@
 NAME = pipex
-SRC = pipex.c pipex_utilities.c
+SRC = pipex.c pipex_utilities.c exit.c
 LIBFT_DIR = ./libft
-PRINTF_SRC = $(addprefix printf/, ft_printf.c ft_print.c ft_numbers.c )
 
 OBJ := $(SRC:%.c=%.o)
-PRINTF_OBJ := $(PRINTF_SRC:%.c=%.o)
 
 CC = cc
 CCFLAGS = -Wextra -Wall -Werror -L./libft -lft -g
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(PRINTF_OBJ)
-	$(MAKE) -C $(LIBFT_DIR)
-	$(CC) $^ -o $@ $(CCFLAGS)
+$(NAME): $(OBJ) libft
+	$(CC) $(OBJ) $(CCFLAGS) -o $(NAME)
 
-%.o: %.c
-	$(CC) -c $< -o $@ $(CCFLAGS)
+libft:
+	$(MAKE) -C $(LIBFT_DIR)
 
 clean:
 	$(MAKE) clean -C $(LIBFT_DIR)
-	rm -f $(OBJ) $(PRINTF_OBJ)
+	rm -f $(OBJ)
 
 fclean: clean
 	$(MAKE) fclean -C $(LIBFT_DIR)
@@ -28,3 +25,5 @@ fclean: clean
 	rm -f $(NAME)
 
 re : fclean all clean
+
+.PHONY : all clean fclean libft

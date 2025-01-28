@@ -6,24 +6,11 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:10:23 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/27 19:34:53 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:34:11 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
-
-void exit_status(t_data *data)
-{
-	if (data->ecmd2 == 0)
-	{
-		if (WEXITSTATUS(data->fd) == 2)
-			exit(127);
-		if (WEXITSTATUS(data->fd) == 13)
-			exit(126);
-		exit (WEXITSTATUS(data->fd));
-	}
-	exit (EXIT_FAILURE);
-}
 
 void	close_path(t_data *data)
 {

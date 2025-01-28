@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/27 19:22:53 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:41:49 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void	check_file(t_data *data, char **av, int inorout)
 		if (access(av[1], F_OK) != 0 || access(av[1], R_OK) != 0)
 		{
 			data->ecmd1 = 1;
-			perror("");
+			perror(av[1]);
 		}
 		if (av[2][0] && data->ecmd1 != 1)
 			data->cmd1 = ft_split(av[2], ' ');
@@ -58,8 +58,6 @@ void	child(char **cmd, char *pcmd, int inorout, t_data *data)
 	if (execve(pcmd, cmd, NULL) == -1)
 	{
 		data->fd = errno;
-		ft_printf("%d", data->fd);
-		ft_printf("hello\n");
 		close_path(data);
 		cleanup(data, data->cmd1, data->cmd2, 1);
 		exit(data->fd);
@@ -128,7 +126,7 @@ int	main(int ac, char **av)
 	}
 	check_file(&data, av, 0);
 	if (pipe(data.pipefd) == -1)
-		perror("pipe error");
+		perror("");
 	data.fd2 = open(av[4], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (data.fd2 != -1 && data.fd2 != 0)
 		close(data.fd2);

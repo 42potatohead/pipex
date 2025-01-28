@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:44:24 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/27 19:23:20 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/28 15:34:49 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define PIPEX_H
 
 # include "./libft/libft.h"
-# include "./printf/ft_printf.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <sys/wait.h>
@@ -37,7 +36,7 @@ typedef struct s_data
 	char	*pcmd2;
 }			t_data;
 
-void 		exit_status(t_data *data);
+void		exit_status(t_data *data);
 void		close_path(t_data *data);
 void		cleanup(t_data *data, char **cmd1, char **cmd2, int flag);
 void		check_file(t_data *data, char **av, int inorout);
