@@ -6,7 +6,7 @@
 #    By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2019/10/07 11:05:52 by rchallie          #+#    #+#              #
-#    Updated: 2025/01/24 17:03:49 by zabu-bak         ###   ########.fr        #
+#    Updated: 2025/01/29 18:44:38 by zabu-bak         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -28,7 +28,7 @@ PRINTF_OBJS		= $(PRINTF_SRC:.c=.o)
 
 CC				= cc
 RM				= rm -rf
-CFLAGS			= -Wall -Wextra -Werror
+CFLAGS			= -Wall -Wextra -Werror -g
 
 NAME			= libft.a
 
