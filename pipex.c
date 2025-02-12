@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/15 10:45:53 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/30 18:36:27 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/02/06 10:04:12 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,13 @@ void	check_file(t_data *data, char **av, int inorout)
 			perror(av[1]);
 		}
 		if (av[2][0] && data->ecmd1 != 1 && data->split == 1)
-			data->cmd1 = ft_split(av[2], ' ');
+			data->cmd1 = NULL;
 		else
 			data->ecmd1 = 1;
 		if (av[3][0] && data->ecmd2 != 1 && data->split1 == 1)
 			data->cmd2 = ft_split(av[3], ' ');
-		// else
-			// data->ecmd2 = 1;
+		else
+			data->ecmd2 = 1;
 	}
 }
 
@@ -58,8 +58,7 @@ void	child(char **cmd, char *pcmd, int inorout, t_data *data)
 	if (execve(pcmd, cmd, NULL) == -1)
 	{
 		data->fd = errno;
-		// if(cmd[0] != NULL)
-		// 	close_path(data);
+		free(pcmd);
 		cleanup(data, data->cmd1, data->cmd2, 1);
 		exit(data->fd);
 	}
@@ -96,12 +95,7 @@ void	cleanup(t_data *data, char **cmd1, char **cmd2, int flag)
 
 void	pid_check(t_data *data, int pid, char **cmd)
 {
-	// if(cmd[0] != NULL)
-		data->pcmd1 = ft_strjoin("/bin/", cmd[0]);
-	// else if(cmd[0] != NULL)
-		data->pcmd2 = ft_strjoin("/bin/", cmd[0]);
-	ft_printf("1 : %s\n", data->pcmd1);
-	ft_printf("2 : %s\n", data->pcmd2);
+	join_path(data, cmd);
 	if (pid == -1)
 	{
 		perror("");
@@ -115,9 +109,7 @@ void	pid_check(t_data *data, int pid, char **cmd)
 		cleanup(data, data->cmd1, data->cmd2, 1);
 	}
 	if (pid == 0 && pid == data->pid2)
-		child(cmd, data->pcmd2, 1, data);
-	if(cmd[0] != NULL)
-		close_path(data);
+		child(cmd, data->pcmd1, 1, data);
 }
 
 int	main(int ac, char **av)
@@ -130,7 +122,6 @@ int	main(int ac, char **av)
 		ft_printf("Wrong number of arguments, Must be 4.\n");
 		exit(1);
 	}
-	check_arg(&data, av);
 	check_file(&data, av, 0);
 	if (pipe(data.pipefd) == -1)
 		perror("");
@@ -141,5 +132,6 @@ int	main(int ac, char **av)
 	if (data.ecmd2 != 0 && data.outfile == 1 && data.fd2 != -1 && data.fd2 != 0)
 		close(data.fd2);
 	ft_wait(&data, av);
+	free(data.pcmd1);
 	exit_status(&data);
 }

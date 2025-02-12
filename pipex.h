@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/14 17:44:24 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/29 18:42:35 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/31 15:55:24 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,10 +36,11 @@ typedef struct s_data
 	char	*pcmd2;
 	int		split;
 	int		split1;
+	int		dupm1;
+	int		dupm2;
 }			t_data;
 
-
-void		check_arg(t_data *data, char **av);
+void		join_path(t_data *data, char **cmd);
 void		exit_status(t_data *data);
 void		close_path(t_data *data);
 void		cleanup(t_data *data, char **cmd1, char **cmd2, int flag);

@@ -6,11 +6,35 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/28 15:33:55 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/30 18:36:09 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/31 16:07:59 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
+
+void	clean_dup(t_data *data)
+{
+	if (data->dupm1 == 1)
+	{
+		free(data->cmd1[0]);
+		free(data->cmd1);
+	}
+	if (data->dupm2 == 1)
+	{
+		free(data->cmd2[0]);
+		free(data->cmd2);
+	}
+}
+
+void	join_path(t_data *data, char **cmd)
+{
+	if (data->pcmd1 != NULL)
+		free (data->pcmd1);
+	if (cmd[0] != NULL)
+		data->pcmd1 = ft_strjoin("/bin/", cmd[0]);
+	else
+		data->pcmd1 = ft_strjoin("/bin/", " ");
+}
 
 void	exit_status(t_data *data)
 {
@@ -23,26 +47,4 @@ void	exit_status(t_data *data)
 		exit (WEXITSTATUS(data->fd));
 	}
 	exit (1);
-}
-
-void	check_arg(t_data *data, char **av)
-{
-	int i;
-
-	i = 0;
-	while(av[2][i] && av[2][i] == ' ')
-		i++;
-	if (av[2][i] == '\0')
-	{
-		data->cmd1 = ft_strdup(av[2]);
-		data->split = 0;
-	}
-	i = 0;
-	while(av[3][i] && av[3][i] == ' ')
-		i++;
-	if (av[3][i] == '\0')
-	{
-		data->cmd2 = ft_strdup(av[3]);
-		data->split1 = 0;
-	}
 }

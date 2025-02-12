@@ -5,7 +5,7 @@ LIBFT_DIR = ./libft
 OBJ := $(SRC:%.c=%.o)
 
 CC = cc
-CCFLAGS = -Wextra -Wall -Werror -L./libft -lft -g
+CFLAGS = -Wextra -Wall -Werror -L./libft -lft -g
 
 all: $(NAME)
 

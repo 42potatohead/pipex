@@ -6,7 +6,7 @@
 /*   By: zabu-bak <marvin@42.fr>                    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/20 21:10:23 by zabu-bak          #+#    #+#             */
-/*   Updated: 2025/01/29 18:44:55 by zabu-bak         ###   ########.fr       */
+/*   Updated: 2025/01/31 15:30:01 by zabu-bak         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,11 +15,11 @@
 void	close_path(t_data *data)
 {
 	free(data->pcmd1);
-	free(data->pcmd2);
 }
 
 void	init_var(t_data *data)
 {
+	data->pcmd1 = NULL;
 	data->split = 1;
 	data->split1 = 1;
 	data->pid1 = -2;
